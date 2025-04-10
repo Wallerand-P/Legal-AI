@@ -35,3 +35,23 @@ The backend returns:
     - positive audit findings and improvement suggestions
 
 The frontend renders a detailed and user-friendly report.
+
+---
+
+## ⚙️ Getting Started
+
+1. Install frontend dependencies
+
+npm install
+
+2. Install backend dependencies
+
+pip install -r requirements.txt
+
+3. Start the backend server
+
+uvicorn app:main --reload
+
+4. Start the frontend development server
+
+npm run dev

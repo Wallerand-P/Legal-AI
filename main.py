@@ -55,7 +55,7 @@ def build_prompt(text: str, regulation: str) -> list[ChatCompletionMessageParam]
     else:
         legal_role = "Tu es un juriste spécialisé en RGPD (UE)."
        
-    print(regulation)
+    #print(regulation)
 
     return [
         {
@@ -109,7 +109,7 @@ def extract_json_from_response(content: str) -> dict:
 # Appel du LLM via Azure OpenAI
 def call_llm(messages: list[ChatCompletionMessageParam]) -> dict:
     # Initialisation du client Azure OpenAI
-    print('Appel au LLM')
+    #print('Appel au LLM')
     client = AzureOpenAI(
     api_key=AZURE_OPENAI_KEY,
     api_version=AZURE_OPENAI_API_VERSION,
