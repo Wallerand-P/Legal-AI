@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,7 +14,7 @@ const LoadingAnalysis: React.FC<LoadingAnalysisProps> = ({
   fileName, 
   progress,
   className,
-  regulation = "RGPD" 
+  regulation = "GDPR" 
 }) => {
   return (
     <div className={cn("flex flex-col items-center", className)}>
@@ -23,10 +22,10 @@ const LoadingAnalysis: React.FC<LoadingAnalysisProps> = ({
         <Loader2 className="h-16 w-16 text-primary animate-spin-slow" />
       </div>
 
-      <h3 className="text-lg font-medium mb-2">Analyse en cours</h3>
+      <h3 className="text-lg font-medium mb-2">Analysis in Progress</h3>
       <p className="text-muted-foreground text-sm text-center mb-4 max-w-sm">
-        Nous analysons votre document "{fileName}" pour déterminer sa conformité avec la réglementation {regulation}.
-        Veuillez patienter quelques instants...
+        We are analyzing your document "{fileName}" to determine its compliance with {regulation} regulations.
+        Please wait a moment...
       </p>
 
       {typeof progress === 'number' && (

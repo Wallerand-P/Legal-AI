@@ -45,52 +45,50 @@ def extract_text_from_pdf(pdf_path):
 # Construction du prompt
 def build_prompt(text: str, regulation: str) -> list[ChatCompletionMessageParam]:
     if regulation.lower() == "ccpa":
-        legal_role = "Tu es un juriste spécialisé en CCPA (loi californienne sur la protection des données)."
+        legal_role = "You are a lawyer specializing in CCPA (California Consumer Privacy Act)."
     elif regulation.lower() == "lgpd":
-        legal_role = "Tu es un juriste spécialisé en LGPD (Brésil)."
+        legal_role = "You are a lawyer specializing in LGPD (Brazil)."
     elif regulation.lower() == "pdpa":
-        legal_role = "Tu es un juriste spécialisé en PDPA (Singapour)."
+        legal_role = "You are a lawyer specializing in PDPA (Singapore)."
     elif regulation.lower() == "pipeda":
-        legal_role = "Tu es un juriste spécialisé en PIPEDA (Canada)."
+        legal_role = "You are a lawyer specializing in PIPEDA (Canada)."
     else:
-        legal_role = "Tu es un juriste spécialisé en RGPD (UE)."
-       
-    #print(regulation)
+        legal_role = "You are a lawyer specializing in GDPR (EU)."
 
     return [
         {
             "role": "system",
             "content": (
                 f"{legal_role}\n"
-                "Tu dois analyser une politique de confidentialité et répondre UNIQUEMENT avec un JSON respectant strictement la structure suivante :\n\n"
+                "You must analyze a privacy policy and respond ONLY with a JSON strictly following the structure below:\n\n"
                 "{\n"
-                '  "score": int entre 0 et 100,\n'
+                '  "score": integer between 0 and 100,\n'
                 '  "positivePoints": [\n'
                 "    {\n"
                 '      "type": "positive",\n'
-                '      "title": "titre court",\n'
-                '      "description": "explication en une ou deux phrases",\n'
-                '      "gdprArticle": "article de la règlementation dont tu es spécialisé (ex: Article 5(1)(b))"\n'
+                '      "title": "short title",\n'
+                '      "description": "explanation in one or two sentences",\n'
+                '      "gdprArticle": "article of the regulation you specialize in (e.g., Article 5(1)(b))"\n'
                 "    },\n"
                 "    ...\n"
                 "  ],\n"
                 '  "improvementPoints": [\n'
                 "    {\n"
                 '      "type": "improvement",\n'
-                '      "title": "titre court",\n'
-                '      "description": "explication du point à améliorer",\n'
-                '      "gdprArticle": "article de la règlementation dont tu es spécialisé",\n'
-                '      "recommendation": "conseil pour corriger ce point"\n'
+                '      "title": "short title",\n'
+                '      "description": "explanation of the point to improve",\n'
+                '      "gdprArticle": "article of the regulation you specialize in",\n'
+                '      "recommendation": "advice to correct this point"\n'
                 "    },\n"
                 "    ...\n"
                 "  ]\n"
                 "}\n\n"
-                "Ne réponds avec rien d’autre que ce JSON (aucun commentaire, aucune explication)."
+                "Respond in English with nothing else but this JSON (no comments, no explanations)."
             )
         },
         {
             "role": "user",
-            "content": f"Voici le texte à auditer :\n\"\"\"\n{text}\n\"\"\""
+            "content": f"Here is the text to audit:\n\"\"\"\n{text}\n\"\"\""
         }
     ]
 
@@ -119,7 +117,7 @@ def call_llm(messages: list[ChatCompletionMessageParam]) -> dict:
     response = client.chat.completions.create(
         model=AZURE_OPENAI_DEPLOYMENT,
         messages=messages,
-        temperature=0.3,
+        temperature=0.2,
     )
     content = response.choices[0].message.content
     return extract_json_from_response(content)

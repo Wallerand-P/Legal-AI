@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   CheckCircle, 
@@ -66,7 +65,7 @@ const AuditItem: React.FC<AuditItemProps> = ({
             <div className="flex items-start mb-3">
               <BookOpen className="h-4 w-4 text-muted-foreground mr-2 mt-0.5" />
               <div>
-                <span className="text-xs font-medium text-muted-foreground">Article concerné :</span>
+                <span className="text-xs font-medium text-muted-foreground">Related article:</span>
                 <p className="text-sm">{gdprArticle}</p>
               </div>
             </div>
@@ -74,7 +73,7 @@ const AuditItem: React.FC<AuditItemProps> = ({
           
           {recommendation && (
             <div className="bg-card p-3 rounded-md mt-3">
-              <span className="text-xs font-medium text-muted-foreground">Recommandation :</span>
+              <span className="text-xs font-medium text-muted-foreground">Recommendation:</span>
               <p className="text-sm">{recommendation}</p>
             </div>
           )}

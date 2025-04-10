@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Download, Home } from "lucide-react";
 import CircleProgress from "./CircleProgress";
@@ -35,24 +34,24 @@ const AuditResults: React.FC<AuditResultsProps> = ({
     <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-8">
         <CircleProgress value={score} size="lg" />
-        <h2 className="text-xl font-medium mt-4">Score de conformité</h2>
+        <h2 className="text-xl font-medium mt-4">Compliance Score</h2>
         <p className="text-muted-foreground">
           {score >= 80 
-            ? "Votre politique est généralement conforme aux exigences règlementaires"
+            ? "Your policy is generally compliant with regulatory requirements"
             : score >= 60
-            ? "Votre politique nécessite quelques améliorations pour être pleinement conforme"
-            : "Votre politique présente des non-conformités significatives"}
+            ? "Your policy needs some improvements to be fully compliant"
+            : "Your policy contains significant compliance issues"}
         </p>
       </div>
 
       <div className="bg-card rounded-xl shadow-sm p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Résumé de l'audit</h2>
+        <h2 className="text-xl font-semibold mb-4">Audit Summary</h2>
         <Separator className="mb-6" />
 
         <div className="mb-6">
           <h3 className="text-lg font-medium mb-3 flex items-center">
             <span className="inline-block w-3 h-3 rounded-full bg-success mr-2"></span>
-            Points positifs
+            Positive Findings
           </h3>
           <div className="space-y-2">
             {positivePoints.map((point, index) => (
@@ -71,7 +70,7 @@ const AuditResults: React.FC<AuditResultsProps> = ({
         <div className="mb-2">
           <h3 className="text-lg font-medium mb-3 flex items-center">
             <span className="inline-block w-3 h-3 rounded-full bg-warning mr-2"></span>
-            Points à améliorer
+            Improvement Areas
           </h3>
           <div className="space-y-2">
             {improvementPoints.map((point, index) => (
@@ -96,7 +95,7 @@ const AuditResults: React.FC<AuditResultsProps> = ({
             className="gap-2"
           >
             <Download className="h-4 w-4" />
-            Télécharger le rapport PDF
+            Download PDF Report
           </Button>
         )}
         
@@ -107,7 +106,7 @@ const AuditResults: React.FC<AuditResultsProps> = ({
           className="gap-2"
         >
           <Home className="h-4 w-4" />
-          Retour à l'accueil
+          Back to Home
         </Button>
       </div>
     </div>

@@ -12,7 +12,7 @@ interface FileUploadProps {
   selectedRegulation: string;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, selectedRegulation}) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, selectedRegulation }) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -48,8 +48,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, sele
   const validateAndProcessFile = async (file: File) => {
     if (file.type !== "application/pdf") {
       toast({
-        title: "Type de fichier non pris en charge",
-        description: "Seuls les fichiers PDF sont autorisés.",
+        title: "Unsupported file type",
+        description: "Only PDF files are allowed.",
         variant: "destructive",
       });
       return;
@@ -57,20 +57,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, sele
 
     if (file.size > 10 * 1024 * 1024) {
       toast({
-        title: "Fichier trop volumineux",
-        description: "La taille du fichier ne doit pas dépasser 10 Mo.",
+        title: "File too large",
+        description: "File size must not exceed 10 MB.",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      console.log(selectedRegulation)
+      console.log(selectedRegulation);
       const formData = new FormData();
       formData.append("file", file);
       formData.append("regulation", selectedRegulation);
 
-      onFileSelected(file, null); // déclenche le spinner
+      onFileSelected(file, null); // triggers loading spinner
 
       const response = await axios.post("http://localhost:8000/analyze", formData, {
         headers: {
@@ -80,10 +80,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, sele
 
       onFileSelected(file, response.data);
     } catch (error) {
-      console.error("Erreur lors de l'envoi du fichier :", error);
+      console.error("Error while uploading file:", error);
       toast({
-        title: "Échec de l'envoi",
-        description: "Une erreur est survenue lors du téléversement du fichier.",
+        title: "Upload failed",
+        description: "An error occurred while uploading the file.",
         variant: "destructive",
       });
     }
@@ -110,13 +110,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, sele
       />
       <Upload className={cn("h-16 w-16 mb-4", isDragActive ? "text-primary" : "text-muted-foreground")} />
       <p className="text-lg font-medium mb-1">
-        {isDragActive ? "Déposez votre fichier ici" : "Glissez-déposez votre politique de confidentialité ici"}
+        {isDragActive ? "Drop your file here" : "Drag and drop your privacy policy here"}
       </p>
       <p className="text-sm text-muted-foreground mb-4">
-        Format PDF uniquement, taille max : 10 Mo
+        PDF only, max size: 10 MB
       </p>
       <Button variant="outline" size="lg" disabled={isLoading} className="font-medium">
-        Choisir un fichier
+        Choose a file
       </Button>
     </div>
   );

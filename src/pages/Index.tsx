@@ -1,5 +1,4 @@
-
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import FileUpload from "@/components/FileUpload";
 import LoadingAnalysis from "@/components/LoadingAnalysis";
@@ -17,7 +16,6 @@ interface FileInfo {
   name: string;
 }
 
-
 const Index = () => {
   const [auditData, setAuditData] = useState<any | null>(null);
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
@@ -31,12 +29,11 @@ const Index = () => {
   
   const handleFileSelected = (file: File, analysisResult: any) => {
     setFileInfo({ file, name: file.name });
-    setIsAnalyzing(true); // déclenche le loader direct
+    setIsAnalyzing(true);
     setAnalysisProgress(0);
     setAuditComplete(false);
     progressRef.current = 0;
 
-    // Simulation de progression
     const interval = setInterval(() => {
       if (progressRef.current < 90) {
         progressRef.current += 5;
@@ -53,34 +50,30 @@ const Index = () => {
       setTimeout(() => {
         setIsAnalyzing(false);
         setAuditComplete(true);
-      }, 500); // petit délai pour laisser le loader s'afficher un moment
+      }, 500);
     }
   };
 
-
   const handleDownloadReport = () => {
-    // In a real app, this would generate and download a PDF
     toast({
-      title: "Téléchargement du rapport",
-      description: "Le rapport détaillé de conformité sera téléchargé dans quelques instants.",
+      title: "Downloading report",
+      description: "Your detailed compliance report will be downloaded shortly.",
     });
   };
 
   const handleReturnHome = () => {
-    // Reset the application state to the initial state
     setFileInfo(null);
     setIsAnalyzing(false);
     setAnalysisProgress(0);
     setAuditComplete(false);
   };
 
-  // Map of regulation codes to display names
   const regulations = {
-    "rgpd": "RGPD",
-    "ccpa": "CCPA",
-    "lgpd": "LGPD",
-    "pdpa": "PDPA",
-    "pipeda": "PIPEDA"
+    rgpd: "GDPR",
+    ccpa: "CCPA",
+    lgpd: "LGPD",
+    pdpa: "PDPA",
+    pipeda: "PIPEDA",
   };
 
   return (
@@ -88,16 +81,16 @@ const Index = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-2xl md:text-3xl font-bold mb-3">
-            Legal AI - Audit de conformité règlementaire
+            Legal AI - Regulatory Compliance Audit
           </h1>
           <div className="flex justify-center items-center gap-2 text-muted-foreground text-lg mx-auto">
-            <p className="whitespace-nowrap">Déposez votre document juridique pour évaluer sa conformité avec</p>
+            <p className="whitespace-nowrap">Drop your legal document to assess compliance with</p>
             <Select 
               value={selectedRegulation} 
               onValueChange={setSelectedRegulation}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sélectionnez une réglementation" />
+                <SelectValue placeholder="Select a regulation" />
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(regulations).map(([value, label]) => (
