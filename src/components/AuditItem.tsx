@@ -66,7 +66,7 @@ const AuditItem: React.FC<AuditItemProps> = ({
             <div className="flex items-start mb-3">
               <BookOpen className="h-4 w-4 text-muted-foreground mr-2 mt-0.5" />
               <div>
-                <span className="text-xs font-medium text-muted-foreground">Article RGPD concerné :</span>
+                <span className="text-xs font-medium text-muted-foreground">Article concerné :</span>
                 <p className="text-sm">{gdprArticle}</p>
               </div>
             </div>

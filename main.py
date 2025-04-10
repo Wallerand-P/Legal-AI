@@ -7,7 +7,7 @@ import logging
 from dotenv import load_dotenv
 from openai import AzureOpenAI
 from openai.types.chat import ChatCompletionMessageParam
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from tempfile import NamedTemporaryFile
 
@@ -43,12 +43,25 @@ def extract_text_from_pdf(pdf_path):
     return full_text.strip()
 
 # Construction du prompt
-def build_prompt(text: str) -> list[ChatCompletionMessageParam]:
+def build_prompt(text: str, regulation: str) -> list[ChatCompletionMessageParam]:
+    if regulation.lower() == "ccpa":
+        legal_role = "Tu es un juriste spécialisé en CCPA (loi californienne sur la protection des données)."
+    elif regulation.lower() == "lgpd":
+        legal_role = "Tu es un juriste spécialisé en LGPD (Brésil)."
+    elif regulation.lower() == "pdpa":
+        legal_role = "Tu es un juriste spécialisé en PDPA (Singapour)."
+    elif regulation.lower() == "pipeda":
+        legal_role = "Tu es un juriste spécialisé en PIPEDA (Canada)."
+    else:
+        legal_role = "Tu es un juriste spécialisé en RGPD (UE)."
+       
+    print(regulation)
+
     return [
         {
             "role": "system",
             "content": (
-                "Tu es un juriste spécialisé en RGPD.\n"
+                f"{legal_role}\n"
                 "Tu dois analyser une politique de confidentialité et répondre UNIQUEMENT avec un JSON respectant strictement la structure suivante :\n\n"
                 "{\n"
                 '  "score": int entre 0 et 100,\n'
@@ -57,7 +70,7 @@ def build_prompt(text: str) -> list[ChatCompletionMessageParam]:
                 '      "type": "positive",\n'
                 '      "title": "titre court",\n'
                 '      "description": "explication en une ou deux phrases",\n'
-                '      "gdprArticle": "article RGPD associé (ex: Article 5(1)(b))"\n'
+                '      "gdprArticle": "article de la règlementation dont tu es spécialisé (ex: Article 5(1)(b))"\n'
                 "    },\n"
                 "    ...\n"
                 "  ],\n"
@@ -66,7 +79,7 @@ def build_prompt(text: str) -> list[ChatCompletionMessageParam]:
                 '      "type": "improvement",\n'
                 '      "title": "titre court",\n'
                 '      "description": "explication du point à améliorer",\n'
-                '      "gdprArticle": "article RGPD concerné",\n'
+                '      "gdprArticle": "article de la règlementation dont tu es spécialisé",\n'
                 '      "recommendation": "conseil pour corriger ce point"\n'
                 "    },\n"
                 "    ...\n"
@@ -96,7 +109,7 @@ def extract_json_from_response(content: str) -> dict:
 # Appel du LLM via Azure OpenAI
 def call_llm(messages: list[ChatCompletionMessageParam]) -> dict:
     # Initialisation du client Azure OpenAI
-    print('Appel au LLM!')
+    print('Appel au LLM')
     client = AzureOpenAI(
     api_key=AZURE_OPENAI_KEY,
     api_version=AZURE_OPENAI_API_VERSION,
@@ -113,14 +126,14 @@ def call_llm(messages: list[ChatCompletionMessageParam]) -> dict:
 
 
 @app.post("/analyze")
-async def analyze_pdf(file: UploadFile = File(...)):
+async def analyze_pdf(file: UploadFile = File(...), regulation: str = Form("rgpd")):
     with NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
         tmp.write(await file.read())
         tmp_path = tmp.name
 
     try:
         text = extract_text_from_pdf(tmp_path)
-        messages = build_prompt(text)
+        messages = build_prompt(text, regulation)
         llm_response = call_llm(messages)
         #json_response = json.loads(llm_response)  # On s'attend à un vrai JSON
         return llm_response
@@ -139,7 +152,7 @@ if __name__ == "__main__":
     text = extract_text_from_pdf(pdf_path)
 
     print("🧠 Construction du prompt...")
-    messages = build_prompt(text)
+    messages = build_prompt(text, 'rgpd')
 
     print("🤖 Appel au modèle GPT...")
     try:

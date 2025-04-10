@@ -35,10 +35,10 @@ const AuditResults: React.FC<AuditResultsProps> = ({
     <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-8">
         <CircleProgress value={score} size="lg" />
-        <h2 className="text-xl font-medium mt-4">Score de conformité RGPD</h2>
+        <h2 className="text-xl font-medium mt-4">Score de conformité</h2>
         <p className="text-muted-foreground">
           {score >= 80 
-            ? "Votre politique est généralement conforme aux exigences du RGPD"
+            ? "Votre politique est généralement conforme aux exigences règlementaires"
             : score >= 60
             ? "Votre politique nécessite quelques améliorations pour être pleinement conforme"
             : "Votre politique présente des non-conformités significatives"}

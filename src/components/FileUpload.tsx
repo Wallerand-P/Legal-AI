@@ -9,9 +9,10 @@ import axios from "axios";
 interface FileUploadProps {
   onFileSelected: (file: File, analysisResult: any) => void;
   isLoading: boolean;
+  selectedRegulation: string;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, selectedRegulation}) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -64,8 +65,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading }) =>
     }
 
     try {
+      console.log(selectedRegulation)
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("regulation", selectedRegulation);
 
       onFileSelected(file, null); // déclenche le spinner
 
