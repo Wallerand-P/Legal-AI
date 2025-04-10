@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import FileUpload from "@/components/FileUpload";
 import LoadingAnalysis from "@/components/LoadingAnalysis";
@@ -18,47 +18,6 @@ interface FileInfo {
 }
 
 
-
-// Mock data for demonstration purposes
-const mockAuditData = {
-  score: 78,
-  positivePoints: [
-    {
-      type: "positive" as const,
-      title: "Finalités de traitement clairement définies",
-      description: "Votre politique de confidentialité explique de façon exhaustive les finalités pour lesquelles vous collectez des données personnelles.",
-      gdprArticle: "Article 5(1)(b) - Les données à caractère personnel doivent être collectées pour des finalités déterminées, explicites et légitimes."
-    },
-    {
-      type: "positive" as const,
-      title: "Durées de conservation spécifiées",
-      description: "Les durées de conservation des différentes catégories de données sont bien précisées.",
-      gdprArticle: "Article 13(2)(a) - Informer la personne concernée sur la durée de conservation des données à caractère personnel."
-    },
-    {
-      type: "positive" as const,
-      title: "Information sur les droits des personnes",
-      description: "Les droits d'accès, de rectification et d'effacement sont clairement mentionnés."
-    }
-  ],
-  improvementPoints: [
-    {
-      type: "improvement" as const,
-      title: "Base légale des traitements incomplète",
-      description: "Certaines opérations de traitement sont mentionnées sans préciser leur base légale (consentement, contrat, intérêt légitime, etc.).",
-      gdprArticle: "Article 6 - Un traitement n'est licite que si l'une des conditions de l'article 6 est remplie.",
-      recommendation: "Précisez pour chaque traitement de données la base légale correspondante parmi celles définies à l'article 6 du RGPD."
-    },
-    {
-      type: "improvement" as const,
-      title: "Transferts hors UE insuffisamment détaillés",
-      description: "Les garanties appropriées pour les transferts de données hors UE ne sont pas suffisamment détaillées.",
-      gdprArticle: "Articles 44 à 49 - Transferts de données à caractère personnel vers des pays tiers ou à des organisations internationales.",
-      recommendation: "Indiquez précisément les pays hors UE vers lesquels les données sont transférées ainsi que les garanties mises en œuvre (clauses contractuelles types, etc.)."
-    }
-  ]
-};
-
 const Index = () => {
   const [auditData, setAuditData] = useState<any | null>(null);
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
@@ -68,12 +27,29 @@ const Index = () => {
   const [selectedRegulation, setSelectedRegulation] = useState("rgpd");
   const { toast } = useToast();
 
+  const progressRef = useRef(0);
+  
   const handleFileSelected = (file: File, analysisResult: any) => {
     setFileInfo({ file, name: file.name });
-    setIsAnalyzing(true); // 👈 on déclenche le loader direct
+    setIsAnalyzing(true); // déclenche le loader direct
+    setAnalysisProgress(0);
+    setAuditComplete(false);
+    progressRef.current = 0;
+
+    // Simulation de progression
+    const interval = setInterval(() => {
+      if (progressRef.current < 90) {
+        progressRef.current += 5;
+        setAnalysisProgress(progressRef.current);
+      } else {
+        clearInterval(interval);
+      }
+    }, 300);
   
     if (analysisResult) {
       setAuditData(analysisResult);
+      clearInterval(interval);
+      setAnalysisProgress(100);
       setTimeout(() => {
         setIsAnalyzing(false);
         setAuditComplete(true);
