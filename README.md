@@ -40,18 +40,26 @@ The frontend renders a detailed and user-friendly report.
 
 ## ⚙️ Getting Started
 
-1. Install frontend dependencies
+### 1. Install frontend dependencies
 
+```bash
 npm install
+```
 
-2. Install backend dependencies
+### 2. Install backend dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
-3. Start the backend server
+### 3. Start the backend server
 
+```bash
 uvicorn app:main --reload
+```
 
-4. Start the frontend development server
+### 4. Start the frontend development server
 
+```bash
 npm run dev
+```
