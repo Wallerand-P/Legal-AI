@@ -161,3 +161,41 @@ if __name__ == "__main__":
         print("❌ Erreur :")
         print(e)
 
+def build_enriched_text_prompt_html(original_text: str, recommendations: dict) -> list[ChatCompletionMessageParam]:
+    improvements = recommendations.get("improvementPoints", [])
+    
+    formatted_recos = "\n".join([
+        f"- {item['title']} : {item['recommendation']}" for item in improvements
+    ])
+
+    return [
+        {
+            "role": "system",
+            "content": (
+                "Tu es un rédacteur juridique expert. Ton objectif est d'améliorer un texte de politique de confidentialité "
+                "en y intégrant des recommandations d'experts.\n\n"
+                "Très important : chaque modification ou ajout intégré au texte **doit être entouré par une balise HTML** :\n"
+                "<span class=\"reco\">...contenu modifié...</span>\n\n"
+                "Cette balise permettra de styliser les parties enrichies visuellement (mise en couleur, encadré, etc.).\n\n"
+                "Respecte le ton, la structure et l’intention du texte original. Ne modifie que ce qui est nécessaire.\n\n"
+                "Tu dois uniquement retourner le **texte enrichi**, avec les balises HTML autour des parties modifiées."
+            )
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Voici le texte original à améliorer :\n\"\"\"\n{original_text}\n\"\"\"\n\n"
+                f"Et voici les recommandations à intégrer dans le texte :\n{formatted_recos}\n\n"
+                "Réécris le texte en intégrant naturellement ces recommandations. "
+                "Encadre chaque ajout ou modification avec la balise :\n<span class=\"reco\">...modification...</span>."
+            )
+        }
+    ]
+
+
+# Simule un enrichissement après analyse
+enriched_prompt = build_enriched_text_prompt_html(text, llm_response)
+enriched_text = call_llm(enriched_prompt)
+
+print("✍️ Texte enrichi :")
+print(enriched_text)
