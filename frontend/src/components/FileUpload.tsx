@@ -110,7 +110,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelected, isLoading, sele
       />
       <Upload className={cn("h-16 w-16 mb-4", isDragActive ? "text-primary" : "text-muted-foreground")} />
       <p className="text-lg font-medium mb-1">
-        {isDragActive ? "Drop your file here" : "Drag and drop your privacy policy here"}
+        {isDragActive ? "Drop your file here" : "Drag and drop your document here"}
       </p>
       <p className="text-sm text-muted-foreground mb-4">
         PDF only, max size: 10 MB
